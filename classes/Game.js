@@ -39,6 +39,13 @@ class Game {
         // TODO перенести в класс
         Game.x = 250;
         Game.y = 500;
+
+
+        // настройки текста
+        Game.context.font = 'bold 20px courier';
+        Game.context.textAlign = 'left';
+        Game.context.textBaseline = 'top';
+        Game.context.fillStyle = 'black';
     }
 
     /**
@@ -58,21 +65,28 @@ class Game {
         // Отрисовка заднего фона
         Game.context.fillStyle = '#FFFFFF';
         Game.context.fillRect(
+            250,
             0,
-            0,
-            Game.width,
+            10,
             Game.height
         );
+
+        // Квадратик
         if (Game.y > 0) {
             Game.context.fillStyle = '#000000';
             Game.context.fillRect(
                 Game.x,
-                Game.y -= 10,
+                Game.y -= 5,
                 10,
                 10
             );
         } else {
             Game.y = 500;
+            window.axios.get('http://localhost/')
+                .then(response => {
+                    if (response.data['data']){
+                    }
+                });
         }
 
     }
@@ -82,7 +96,7 @@ class Game {
      */
     static pusherConnect(){
         // TODO delete me
-        Pusher.logToConsole = true;
+        //Pusher.logToConsole = true;
 
         const pusher = new Pusher('82314a91fbaa0b80b82e', {
             cluster: 'mt1'
@@ -90,7 +104,21 @@ class Game {
 
         const channel = pusher.subscribe('my-channel');
         channel.bind('my-event', function(data) {
-            alert(JSON.stringify(data));
+            // Отрисовка заднего фона
+            Game.context.fillStyle = '#FFFFFF';
+            Game.context.fillRect(
+                0,
+                Game.height - 20,
+                200,
+                20
+            );
+            // Текс с сервера
+            Game.context.fillStyle = 'black';
+            Game.context.fillText(
+                data.message,
+                0,
+                Game.height - 20
+            );
         });
     }
 }
