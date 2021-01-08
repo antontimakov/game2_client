@@ -35,6 +35,10 @@ class Game {
 
         this.pusherConnect();
         setInterval(this.renderFrame, this.timeout);
+
+        // TODO перенести в класс
+        Game.x = 250;
+        Game.y = 500;
     }
 
     /**
@@ -51,13 +55,26 @@ class Game {
      * Отрисовка кадра
      */
     static renderFrame(){
-        Game.context.fillStyle = '#000000';
+        // Отрисовка заднего фона
+        Game.context.fillStyle = '#FFFFFF';
         Game.context.fillRect(
             0,
             0,
-            10,
-            10
+            Game.width,
+            Game.height
         );
+        if (Game.y > 0) {
+            Game.context.fillStyle = '#000000';
+            Game.context.fillRect(
+                Game.x,
+                Game.y -= 10,
+                10,
+                10
+            );
+        } else {
+            Game.y = 500;
+        }
+
     }
 
     /**
