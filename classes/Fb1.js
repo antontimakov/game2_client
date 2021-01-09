@@ -120,9 +120,9 @@ class Fb1
             cp2y: this.firstY - this.heightY2
         };
         this.rightB = {
-            cp1x: this.firstX + this.widthX1,
+            cp1x: this.firstX + this.widthX2,
             cp1y: this.firstY - this.heightY2,
-            cp2x: this.firstX + this.widthX2,
+            cp2x: this.firstX + this.widthX1,
             cp2y: this.firstY - this.heightY1
         };
         cnt.fillStyle = color;
