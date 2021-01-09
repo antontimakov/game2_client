@@ -1,8 +1,10 @@
 /**
  * Класс определяющий параметры игрового поля
  */
-class Game {
-    static init() {
+class Game
+{
+    static init()
+    {
         /**
          * Канвас объект
          * @type {HTMLElement}
@@ -35,64 +37,14 @@ class Game {
 
         this.pusherConnect();
 
-        //setInterval(this.renderFrame, this.timeout);
-
-        // TODO перенести в класс
-        Game.x = 250;
-        Game.y = 500;
-        Game.w = 10;
-        Game.h = 10;
-
-        Game.firstX = 250;
-        Game.firstY = 500;
-        Game.lastY = 400;
-
-        Game.widthX1 = 20;
-        Game.widthX2 = 20;
-        Game.heightY1 = 45;
-        Game.heightY2 = 98;
-
-        this.renderFb();
-
-        // Game.firstY = 100;
-        // Game.lastY = 0;
-        Game.firstY = 300;
-        Game.lastY = 200;
-        this.renderFb();
-
-        Game.firstY = 35;
-        Game.lastY = 0;
-        Game.heightY1 = 0;
-        Game.heightY2 = 35;
-        this.renderFb();
+        Game.ball = new Fb1();
+        setInterval(this.renderFrame, this.timeout);
 
         // настройки текста
         Game.context.font = 'bold 20px courier';
         Game.context.textAlign = 'left';
         Game.context.textBaseline = 'top';
         Game.context.fillStyle = 'black';
-    }
-
-    static renderFb(){
-        Game.leftB = {
-            cp1x: Game.firstX - Game.widthX1,
-            cp1y: Game.firstY - Game.heightY1,
-            cp2x: Game.firstX - Game.widthX2,
-            cp2y: Game.firstY - Game.heightY2
-        };
-        Game.rightB = {
-            cp1x: Game.firstX + Game.widthX1,
-            cp1y: Game.firstY - Game.heightY2,
-            cp2x: Game.firstX + Game.widthX2,
-            cp2y: Game.firstY - Game.heightY1
-        };
-        Game.context.fillStyle = '#FF8000';
-        Game.context.beginPath();
-        Game.context.moveTo(Game.firstX, Game.firstY);
-        Game.context.bezierCurveTo(Game.leftB.cp1x, Game.leftB.cp1y, Game.leftB.cp2x, Game.leftB.cp2y, Game.firstX, Game.lastY);
-        Game.context.moveTo(Game.firstX, Game.lastY);
-        Game.context.bezierCurveTo(Game.rightB.cp1x, Game.rightB.cp1y, Game.rightB.cp2x, Game.rightB.cp2y, Game.firstX, Game.firstY);
-        Game.context.fill();
     }
 
     /**
@@ -108,47 +60,32 @@ class Game {
     /**
      * Отрисовка кадра
      */
-    static renderFrame(){
+    static renderFrame()
+    {
         // Отрисовка заднего фона
         Game.context.fillStyle = '#FFFFFF';
         Game.context.fillRect(
-            230,
+            200,
             0,
-            50,
+            100,
             Game.height
         );
-
-        // // Квадратик
-        // if (Game.y > 0) {
-        //     Game.context.fillStyle = '#000000';
-        //     Game.context.fillRect(
-        //         Game.x,
-        //         Game.y -= 5,
-        //         10,
-        //         10
-        //     );
-        // } else {
-        //     //Game.y = 500;
-        //     Game.context.fillStyle = '#000000';
-        //     Game.context.fillRect(
-        //         --Game.x,
-        //         Game.y,
-        //         Game.w += 2,
-        //         Game.h += 2
-        //     );
-        //     // window.axios.get('http://localhost/')
-        //     //     .then(response => {
-        //     //         if (response.data['data']){
-        //     //         }
-        //     //     });
-        // }
-
+        // Если анимация закончена
+        if (Game.ball.animate() === true){
+            window.axios.get('http://localhost/')
+                .then(response => {
+                    if (response.data['data']){
+                    }
+                });
+            Game.ball = new Fb1();
+        }
     }
 
     /**
      * Соединение по веб сокету
      */
-    static pusherConnect(){
+    static pusherConnect()
+    {
         // TODO delete me
         //Pusher.logToConsole = true;
 
