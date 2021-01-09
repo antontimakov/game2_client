@@ -3,19 +3,31 @@
  */
 class Fb1
 {
-    constructor()
+    /**
+     * Конструктор Шара
+     * @param {number} pFirstX Координата X запуска
+     * @param {number} pFirstY Координата Y запуска
+     * @param {number} pTop Высота на которой шар должен остановиться
+     */
+    constructor(pFirstX = 250, pFirstY = 500, pTop = 100)
     {
         /**
-         * Координаты нижней начальной точки
+         * Координата X запуска
          * @type {number}
          */
-        this.firstX = 250;
+        this.firstX = pFirstX;
 
         /**
-         * Координаты нижней начальной точки
+         * Координата Y запуска
          * @type {number}
          */
-        this.firstY = 500;
+        this.firstY = pFirstY;
+
+        /**
+         * Высота на которой шар должен остановиться
+         * @type {number}
+         */
+        this.top = pTop;
 
         /**
          * Высота шара
@@ -60,16 +72,44 @@ class Fb1
         this.speedCollapse = 5;
 
         /**
+         * Прозрачность
+         * @type {number}
+         */
+        this.attenuation = 1;
+
+        /**
+         * Скорость затухания
+         * @type {number}
+         */
+        this.speedAttenuation = 0.05;
+
+        /**
          * Уроверь анимации действующей на данный момент
          * @type {number}
          */
         this.level = 1;
+
+        this.background = {
+            x: 200,
+            y: this.top,
+            w: 100,
+            h: this.firstY - this.top
+        };
+
+        // очерчиваем игровое поле
+        Game.context.fillStyle = '#000000';
+        Game.context.strokeRect(
+            this.background.x,
+            this.background.y,
+            this.background.w,
+            this.background.h
+        );
     }
 
     /**
      * Отрисовка шара
      */
-    renderFb()
+    renderFb(color = '#FF8000')
     {
         const cnt = Game.context;
 
@@ -85,7 +125,7 @@ class Fb1
             cp2x: this.firstX + this.widthX2,
             cp2y: this.firstY - this.heightY1
         };
-        cnt.fillStyle = '#FF8000';
+        cnt.fillStyle = color;
         cnt.beginPath();
         cnt.moveTo(this.firstX, this.firstY);
         cnt.bezierCurveTo(this.leftB.cp1x, this.leftB.cp1y, this.leftB.cp2x, this.leftB.cp2y, this.firstX, this.firstY - this.height);
@@ -96,14 +136,23 @@ class Fb1
 
     /**
      * Полный цикл анимации
-     * @returns {boolean}
+     * @returns {boolean} Флаг, закончина ли анимация
      */
     animate(){
         let finish = false;
 
+        // Отрисовка заднего фона
+        Game.context.fillStyle = '#FFFFFF';
+        Game.context.fillRect(
+            this.background.x,
+            this.background.y,
+            this.background.w,
+            this.background.h
+        );
+
         if (this.level === 1){
             this.animateMove(this.speedMove);
-            if (this.firstY <= this.height){
+            if (this.firstY <= this.height + this.top){
                 ++this.level;
             }
         }
@@ -114,12 +163,19 @@ class Fb1
             }
         }
         if (this.level === 3){
-            if(this.firstY > 50){
+            if(this.firstY > 50 + this.top){
                 ++this.level;
             }
             this.animateDetonationExplode();
         }
         if (this.level === 4){
+            this.animateDetonationAttenuation();
+            if(this.attenuation <= 0){
+                ++this.level;
+                this.attenuation = 1;
+            }
+        }
+        if (this.level === 5){
             finish = true;
         }
         return finish;
@@ -163,9 +219,17 @@ class Fb1
         this.height += 10;
         this.widthX1 += 9;
         this.widthX2 += 9;
-        this.heightY1 = 1;
-        this.heightY2 = this.firstY;
+        this.heightY1 = 0;
+        this.heightY2 = this.height;
 
         this.renderFb();
+    }
+
+    /**
+     * Анимация затухания
+     */
+    animateDetonationAttenuation()
+    {
+        this.renderFb("rgba(255,128,0," + (this.attenuation -= this.speedAttenuation) + ")");
     }
 }

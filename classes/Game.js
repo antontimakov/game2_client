@@ -35,6 +35,15 @@ class Game
          */
         this.context = this.create();
 
+        // очерчиваем игровое поле
+        Game.context.fillStyle = '#000000';
+        Game.context.strokeRect(
+            0,
+            0,
+            this.width,
+            this.height
+        );
+
         this.pusherConnect();
 
         Game.ball = new Fb1();
@@ -62,14 +71,6 @@ class Game
      */
     static renderFrame()
     {
-        // Отрисовка заднего фона
-        Game.context.fillStyle = '#FFFFFF';
-        Game.context.fillRect(
-            200,
-            0,
-            100,
-            Game.height
-        );
         // Если анимация закончена
         if (Game.ball.animate() === true){
             window.axios.get('http://localhost/')
