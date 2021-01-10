@@ -63,6 +63,14 @@ class Fb2 {
          */
         this.heightY2 = 98;
 
+        this.toLeft = true;
+
+        /**
+         * Уроверь анимации действующей на данный момент
+         * @type {number}
+         */
+        this.level = 1;
+
         this.background = {
             x: 200,
             y: this.top,
@@ -78,34 +86,12 @@ class Fb2 {
             this.background.w,
             this.background.h
         );
-
-        this.renderFb();
     }
-
-    // renderFb(color = '#FF8000')
-    // {
-    //     const cnt = Game.context;
-    //
-    //     cnt.fillStyle = color;
-    //     cnt.beginPath();
-    //     cnt.moveTo(this.firstX, this.firstY); // 250 500
-    //     cnt.bezierCurveTo(260, 430, 220, 402, 250, 400);
-    //     cnt.moveTo(250, 400);
-    //     cnt.bezierCurveTo(280, 402, 270, 430, 250, 500);
-    //     cnt.fill();
-    //
-    //     cnt.beginPath();
-    //     cnt.moveTo(250, 300); // 250 300
-    //     cnt.bezierCurveTo(230, 230, 220, 202, 250, 200);
-    //     cnt.moveTo(250, 200);
-    //     cnt.bezierCurveTo(280, 202, 240, 230, 250, 300);
-    //     cnt.fill();
-    // }
 
     /**
      * Отрисовка шара
      */
-    renderFb(color = '#FF8000')
+    renderFb(color = '#FF6000')
     {
         const cnt = Game.context;
 
@@ -149,6 +135,9 @@ class Fb2 {
 
         if (this.level === 1){
             this.animateMove();
+            if (this.firstY <= this.height + this.top){
+                ++this.level;
+            }
         }
         if (this.level === 2){
             finish = true;
@@ -156,9 +145,31 @@ class Fb2 {
         return finish;
     }
 
-    animateMove()
+    animateMove(step = 1)
     {
         this.firstY -= step;
+        if (this.toLeft) {
+            if (this.widthX1 <= 20) {
+                this.widthX1 += 1;
+            }
+            else{
+                this.toLeft = false;
+            }
+            if (this.widthX1_2 >= -10) {
+                this.widthX1_2 -= 1;
+            }
+        }
+        else{
+            if (this.widthX1_2 <= 20) {
+                this.widthX1_2 += 1;
+            }
+            else{
+                this.toLeft = true;
+            }
+            if (this.widthX1 >= -10) {
+                this.widthX1 -= 1;
+            }
+        }
 
         this.renderFb();
     }
