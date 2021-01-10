@@ -63,6 +63,22 @@ class Fb2 {
          */
         this.heightY2 = 98;
 
+        /**
+         * Скорость движения шара
+         * @type {number}
+         */
+        this.speedMove = 3;
+
+        /**
+         * Скорость перетекания анимации
+         * @type {number}
+         */
+        this.speedMoveХ = 2;
+
+        /**
+         * Текущее направление перетекания анимации
+         * @type {boolean}
+         */
         this.toLeft = true;
 
         /**
@@ -134,7 +150,7 @@ class Fb2 {
         );
 
         if (this.level === 1){
-            this.animateMove();
+            this.animateMove(this.speedMove);
             if (this.firstY <= this.height + this.top){
                 ++this.level;
             }
@@ -150,24 +166,24 @@ class Fb2 {
         this.firstY -= step;
         if (this.toLeft) {
             if (this.widthX1 <= 20) {
-                this.widthX1 += 1;
+                this.widthX1 += this.speedMoveХ;
             }
             else{
                 this.toLeft = false;
             }
             if (this.widthX1_2 >= -10) {
-                this.widthX1_2 -= 1;
+                this.widthX1_2 -= this.speedMoveХ;
             }
         }
         else{
             if (this.widthX1_2 <= 20) {
-                this.widthX1_2 += 1;
+                this.widthX1_2 += this.speedMoveХ;
             }
             else{
                 this.toLeft = true;
             }
             if (this.widthX1 >= -10) {
-                this.widthX1 -= 1;
+                this.widthX1 -= this.speedMoveХ;
             }
         }
 
