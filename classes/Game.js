@@ -44,9 +44,15 @@ class Game
             this.height
         );
 
-        this.pusherConnect();
+        //this.pusherConnect();
 
-        Game.ball = new Fb1();
+        Game.menu = new FireMenu();
+
+
+        this.canvas.onmousemove = function (poE){
+            Game.over(poE)
+        };
+
         setInterval(this.renderFrame, this.timeout);
 
         // настройки текста
@@ -54,6 +60,34 @@ class Game
         Game.context.textAlign = 'left';
         Game.context.textBaseline = 'top';
         Game.context.fillStyle = 'black';
+    }
+
+    static over(poE){
+        const menuBgr = Game.menu.background;
+        if (Game.overMy(poE, menuBgr)){
+            Game.canvas.style.cursor = 'pointer';
+            // номер кнопки
+            const numBut = Math.floor(poE.pageX / Game.menu.btnW);
+            const curBtn = Game.menu.btns[numBut];
+            if (curBtn){
+                this.canvas.onclick = curBtn.click;
+            }
+            // if (this.clickBody){
+            //     Game.canvas.style.cursor = 'pointer';
+            // }
+            // if (this.overBody){
+            //     this.overBody(poE);
+            // }
+        }
+    }
+
+    static overMy(poE, menuBgr){
+        return (
+            poE.pageX > menuBgr.x &&
+            poE.pageX <= (menuBgr.x + menuBgr.w) &&
+            poE.pageY > menuBgr.y &&
+            poE.pageY <= (menuBgr.y + menuBgr.h)
+        );
     }
 
     /**
@@ -72,13 +106,13 @@ class Game
     static renderFrame()
     {
         // Если анимация закончена
-        if (Game.ball.animate() === true){
-            window.axios.get('http://localhost/')
-                .then(response => {
-                    if (response.data['data']){
-                    }
-                });
-            Game.ball = new Fb1();
+        if (Game.ball && Game.ball.animate() === true){
+            // window.axios.get('http://localhost/')
+            //     .then(response => {
+            //         if (response.data['data']){
+            //         }
+            //     });
+            //Game.ball = new Fb2(250, 400);
         }
     }
 
