@@ -44,7 +44,7 @@ class Game
             this.height
         );
 
-        //this.pusherConnect();
+        this.pusherConnect();
 
         Game.menu = new FireMenu();
 
@@ -130,7 +130,14 @@ class Game
 
         const channel = pusher.subscribe('my-channel');
         channel.bind('my-event', function(data) {
-            // Отрисовка заднего фона
+
+            const spanHpPlayer = document.getElementById("hpPlayer");
+            const spanHpEnemy = document.getElementById("hpEnemy");
+
+            spanHpPlayer.innerText = data.message.hpPlayer;
+            spanHpEnemy.innerText = data.message.hpEnemy;
+
+            /*// Отрисовка заднего фона
             Game.context.fillStyle = '#FFFFFF';
             Game.context.fillRect(
                 0,
@@ -144,7 +151,7 @@ class Game
                 data.message,
                 0,
                 Game.height - 20
-            );
+            );*/
         });
     }
 }
